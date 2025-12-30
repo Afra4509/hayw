@@ -1,0 +1,46 @@
+# .htaccess - Simpan di folder web_userpw
+
+# Blokir akses langsung ke file log
+<FilesMatch "access_log\.txt">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Blokir akses ke file usernamepw.txt (HAPUS FILE INI!)
+<FilesMatch "usernamepw\.txt">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Force HTTPS (jika sudah ada SSL)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Nonaktifkan directory listing
+Options -Indexes
+
+# Proteksi dari clickjacking
+Header always append X-Frame-Options SAMEORIGIN
+
+# XSS Protection
+Header set X-XSS-Protection "1; mode=block"
+
+# Prevent MIME sniffing
+Header set X-Content-Type-Options nosniff
+
+# Blokir akses file sensitif
+<FilesMatch "\.(env|log|sql|bak|conf|config)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Rate limiting (jika server support mod_evasive)
+# <IfModule mod_evasive20.c>
+#     DOSHashTableSize 3097
+#     DOSPageCount 5
+#     DOSSiteCount 50
+#     DOSPageInterval 1
+#     DOSSiteInterval 1
+#     DOSBlockingPeriod 60
+# </IfModule>
